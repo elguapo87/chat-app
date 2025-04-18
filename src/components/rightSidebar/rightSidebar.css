@@ -1,3 +1,4 @@
+
 .rs {
     color: white;
     background: #001030;
@@ -30,7 +31,7 @@
 }
 
 .rs-profile p {
-    font-size: 10px;
+    font-size: 12px;
     opacity: 80%;
     font-weight: 300;
 }
@@ -42,36 +43,25 @@
 
 .rs-media {
     padding: 0px 20px;
-    font-size: 13px;
+    font-size: 14px;
+    text-align: center;
 }
 
 .rs-media div {
-    max-height: 180px;
+    max-height: 250px;
     overflow-y: scroll;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-content: center;
     gap: 5px;
     margin-top: 8px;
 }
 
 .rs-media div img {
-    width: 60px;
+    width: 65px;
+    height: 40px;
     border-radius: 4px;
-    cursor: pointer;
-}
-
-.rs button {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #077eff;
-    color: white;
-    border: none;
-    font-size: 12px;
-    font-weight: 300;
-    padding: 10px 65px;
-    border-radius: 20px;
     cursor: pointer;
 }
 
@@ -81,6 +71,7 @@
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    align-items: center;
     gap: 20px;
 }
 
@@ -106,6 +97,10 @@
     cursor: pointer;
 }
 
+/* .rs-logout {
+    position: relative;
+} */
+
 .second .logout-btn {
     position: absolute;
     bottom: 20px;
@@ -113,8 +108,68 @@
     transform: translateX(-50%);
 }
 
+.rs.block {
+    display: block;
+    width: 100%;
+}
+
+.back-arrow {
+    display: none;
+}
+
+.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 @media (max-width: 900px) {
-    .rs {
-        display: none;
+    .rs-profile {
+        padding-top: 0px;
+        max-width: auto;
     }
+
+    .rs-profile img {
+        width: 90px;
+    }
+
+    .rs hr {
+        margin: 8px 0px;
+    }
+
+    .rs-profile p {
+        font-size: 10px;
+    } 
+
+    .rs-media {
+        padding: 0px 10px;
+        font-size: 13px;
+    }
+
+    .rs-media div {
+        max-height: 150px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .rs button {
+        font-size: 12px;
+    }
+
+    .buttons {
+        bottom: 5px;
+        padding: 8px 50px;
+        gap: 5px;
+    }
+
+    .back-arrow {
+        display: block;
+        width: 35px;
+        height: 35px;
+        margin-top: 10px;
+        margin-left: 10px;
+    }  
 }
