@@ -10,6 +10,9 @@ const AppContextProvider = (props) => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
     const [chatData, setChatData] = useState(null);
+    const [messagesId, setMessagesId] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [chatUser, setChatUser] = useState(null);
 
     const loadUserData = async (uid) => {
         try {
@@ -30,7 +33,7 @@ const AppContextProvider = (props) => {
             });
 
             setInterval(async () => {
-                if (auth.currentUser) {
+                if (auth.chatUser) {
                     await updateDoc(userRef, {
                         lastSeen: Date.now()
                     });
@@ -38,40 +41,41 @@ const AppContextProvider = (props) => {
             }, 60000);
 
         } catch (error) {
-            
+
         }
     };
-
-    const updateChatData = (newChat) => {                                                    
-        setChatData((prevChatData) => {
-            if (prevChatData.some((chat) => chat.messageId === newChat.messageId)) {
-                return prevChatData; // Avoid duplicate entries
-            }
-            return [newChat, ...prevChatData].sort((a, b) => b.updatedAt - a.updatedAt);
-        });
-    }
 
     useEffect(() => {
         if (userData) {
             const chatRef = doc(db, "chats", userData.id);
-            /* Prvi nacin  */
             const unSub = onSnapshot(chatRef, async (res) => {
                 const chatItems = res.data().chatsData;
-                const tempData = [];
-                for(const item of chatItems) {
-                    const userRef = doc(db, "users", item.rId);
-                    const userSnap = await getDoc(userRef);
-                    const userData = userSnap.data();
-                    tempData.push({ ...item, userData })
-                }
-                setChatData(tempData.sort((a, b) => b.updatedAt - a.updatedAt))
+                const tempData = await Promise.all(
+                    chatItems.map(async (item) => {
+                        const userRef = doc(db, "users", item.rId);
+                        const userSnap = await getDoc(userRef);
+                        const userData = userSnap.data();
+                        return { ...item, userData };
+                    })
+                );
+                setChatData(tempData.sort((a, b) => b.updatedAt - a.updatedAt));
             });
             return () => {
                 unSub();
-            }
+            };
         }
 
-    }, [userData]);
+        if (messagesId) {
+            const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
+                console.log("Messages updated:", res.data());
+                setMessages(res.data().messages.reverse());
+            });
+
+            return () => {
+                unSub();
+            };
+        }
+    }, [userData, messagesId]);
 
     const value = {
         userData,
@@ -79,7 +83,12 @@ const AppContextProvider = (props) => {
         chatData,
         setChatData,
         loadUserData,
-        updateChatData
+        messagesId,
+        setMessagesId,
+        messages,
+        setMessages,
+        chatUser,
+        setChatUser
     }
 
     return (
