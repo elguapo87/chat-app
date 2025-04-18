@@ -1,10 +1,25 @@
 .login {
-    min-height: 100vh;
-    background: url("/background.png") no-repeat;
+    background: url("/chat_img.jpg") no-repeat;
     background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+}
+
+.login::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(115, 62, 236, 0.4);
+    backdrop-filter: blur(6px) saturate(90%);
+    z-index: -1;
 }
 
 .login .logo {
@@ -22,6 +37,7 @@
 
 .login-form h2 {
     font-weight: 500;
+    text-align: center;
 }
 
 .form-input {
@@ -65,12 +81,14 @@
     cursor: pointer;
 }
 
-@media (max-width: 900px) {
-    .chat-container {
-        display: flex;
-    }
+.reset {
+    margin-top: 10px;
+}
 
-    .loading {
-        font-size: 30px;
+@media (max-width: 768px) {
+    .login {
+        flex-direction: column;
+        justify-content: center;
+        gap: 30px;
     }
 }

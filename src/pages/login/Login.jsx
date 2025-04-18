@@ -1,59 +1,67 @@
 import "./login.css";
 import assets from "../../assets/assets";
 import { useState } from "react";
-import { login, signUp } from "../../config/firebase";
+import { login, ressetPassword, signUp } from "../../config/firebase";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const [currentState, setCurrentState] = useState("Sign Up");
+
+  const [currentState, setCurrentState] = useState("Login");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const onSubmitHandler = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (currentState === "Sign Up") {
-      signUp(userName, email, password);
+    
+    try {
+      if (currentState === "Login") {
+        login(email, password);
+        
+      } else {
+        signUp(userName, email, password);
+      }
 
-    } else {
-      login(email, password);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
-  }
+  };
 
   return (
-    <div className="login">
-      <img src={assets.logo_big} alt="" className="logo" />
-      <form onSubmit={onSubmitHandler} className="login-form">
+    <div className="login" >
+      <img src={assets.logo_pg} alt="" className="logo" />
+      <form onSubmit={handleSubmit} className="login-form">
         <h2>{currentState}</h2>
         {
-          currentState !== "Sign Up"
-            ?
-            <></>
-            :
-            <input onChange={(e) => setUserName(e.target.value)} value={userName} type="text" placeholder="username" required className="form-input" />
+          currentState !== "Login"
+                  &&
+          <input onChange={(e) => setUserName(e.target.value)} value={userName} type="text" placeholder="username" className="form-input" required />
         }
-        <input onChange={(e) => setEmail(e.target.value)} type="email" value={email} placeholder="Email Address" required className="form-input" />
-        <input onChange={(e) => setPassword(e.target.value)} type="password" value={password} placeholder="password" required className="form-input" />
-        <button type="submit">{currentState === "Sign Up" ? "Create account" : "Login now"}</button>
+        <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" placeholder="email" className="form-input" required />
+        <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" placeholder="password" className="form-input" required />
+        <button type="submit">{currentState === "Login" ? "Login" : "Sign Up"}</button>
 
         <div className="login-term">
-          <input type="checkbox" />
+          <input type="checkbox" required />
           <p>Agree to the terms of use & privacy policy.</p>
         </div>
 
         <div className="login-forgot">
-          {currentState === "Sign Up"
-            ?
-            <p className="login-toggle">Already have an account? <span onClick={() => setCurrentState("Login")}>Login here</span></p>
-            :
+          {
+            currentState === "Login"
+                   ?
             <p className="login-toggle">Create an account <span onClick={() => setCurrentState("Sign Up")}>Click here</span></p>
+                   :
+            <p className="login-toggle">Already have an account <span onClick={() => setCurrentState("Login")}>Login here</span></p>
           }
 
           {
             currentState === "Login"
-              ?
-              <p className="login-toggle">Forgot Password ? <span onClick={() => resetPass(email)}>reset here</span></p>
-              :
-              null
+                   ?
+            <p className="login-toggle reset">Forgot Password ? <span onClick={() => ressetPassword(email)}>rest here</span></p>
+                  :
+                 null
           }
         </div>
       </form>

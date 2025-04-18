@@ -1,11 +1,26 @@
 .profile {
     min-height: 100vh;
-    background: url(/background.png) no-repeat;
+    background: url("/chat_img.jpg") no-repeat;
     background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+.profile::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(115, 62, 236, 0.4);
+    backdrop-filter: blur(6px) saturate(90%);
+    z-index: -1;
+} 
 
 .profile-container {
     background: white;
@@ -48,7 +63,8 @@
     border-radius: 50%;
 }
 
-.profile input, textarea {
+.profile input,
+.profile textarea {
     padding: 10px;
     min-width: 300px;
     border: 1px solid #c9c9c9;
@@ -62,4 +78,31 @@
     padding: 8px;
     font-size: 16px;
     cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .profile-container {
+        justify-content: center;
+        min-width: auto;
+        max-width: 400px;
+    }
+
+    .profile form {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .profile-pic {
+        display: none;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile input,
+    .profile textarea {
+        min-width: auto;
+        max-width: 250;
+    }
 }
