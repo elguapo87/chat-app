@@ -1,38 +1,54 @@
 import "./rightSidebar.css";
 import assets from "../../assets/assets";
 import { logout } from "../../config/firebase";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../../context/AppContext";
 
 const RightSidebar = () => {
-  return (
+  const { chatUser, messages } = useContext(AppContext);
+  const [msgImages, setMsgImages] = useState([]);
+
+  useEffect(() => {
+    let tempVar = [];
+    messages.map((msg) => {
+      if (msg.image) {
+        tempVar.push(msg.image);
+      }
+    })
+    setMsgImages(tempVar);
+
+  }, [messages]);
+
+
+  return chatUser ? (
     <div className="rs">
       <div className="rs-profile">
-        <img src={assets.profile_img} alt="" />
-        <h3>John Doe <img className="dot" src={assets.green_dot} alt="" /></h3>
-        <p>Hey, There I'am John Doe using this chat</p>
+        <img src={chatUser.userData.avatar || assets.avatar_icon} alt="" />
+        <h3>{Date.now() - chatUser.userData.lastSeen <= 70000 ? <img className="dot" src={assets.green_dot} alt="" /> : null}
+          {chatUser.userData.name}
+        </h3>
+        <p>{chatUser.userData.bio}</p>
       </div>
       <hr />
 
       <div className="rs-media">
         <p>Media</p>
         <div>
-          <img src={assets.pic1} alt="" />
-          <img src={assets.pic2} alt="" />
-          <img src={assets.pic3} alt="" />
-          <img src={assets.pic4} alt="" />
-          <img src={assets.pic1} alt="" />
-          <img src={assets.pic2} alt="" />
+          {msgImages.map((url, index) => (
+            <img key={index} onClick={() => window.open(url)} src={url} alt="" />
+          ))}
         </div>
       </div>
 
-      <button>Logout</button>
-      
       <div className="buttons">
-      <button onClick={() => logout()}>Logout</button>
+        <button onClick={() => logout()} className="logout-btn">Logout</button>
         <button className="block-btn">Block</button>
       </div>
-
     </div>
-  )
+  ) :
+    (<div className="rs second">
+      <button onClick={() => logout()}>Logout</button>
+    </div>)
 }
 
 export default RightSidebar

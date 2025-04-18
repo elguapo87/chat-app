@@ -105,3 +105,10 @@
     border-radius: 8px;
     cursor: pointer;
 }
+
+.second .logout-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}

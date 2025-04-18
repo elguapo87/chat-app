@@ -23,29 +23,28 @@ const AppContextProvider = (props) => {
 
             if (userData.avatar && userData.name) {
                 navigate("/chat");
-
             } else {
-                navigate("/profileUpdate");
+                navigate("/profile-update");
             }
 
             await updateDoc(userRef, {
-                lastSeen: Date.now()
-            });
+                lastSeen: Date.now(),                       
+            }); 
 
             setInterval(async () => {
                 if (auth.chatUser) {
                     await updateDoc(userRef, {
-                        lastSeen: Date.now()
+                        lastSeen: Date.now(),             
                     });
                 }
-            }, 60000);
+            }, 6000);
 
         } catch (error) {
-
+            console.log(error);
         }
     };
 
-    useEffect(() => {
+    useEffect(() => {                                          
         if (userData) {
             const chatRef = doc(db, "chats", userData.id);
             const unSub = onSnapshot(chatRef, async (res) => {
@@ -60,22 +59,23 @@ const AppContextProvider = (props) => {
                 );
                 setChatData(tempData.sort((a, b) => b.updatedAt - a.updatedAt));
             });
+    
             return () => {
                 unSub();
             };
         }
 
-        if (messagesId) {
+        if (messagesId) {                                                                 
             const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
                 console.log("Messages updated:", res.data());
                 setMessages(res.data().messages.reverse());
             });
-
+    
             return () => {
                 unSub();
             };
         }
-    }, [userData, messagesId]);
+    }, [userData, messagesId]);                
 
     const value = {
         userData,
