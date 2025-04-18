@@ -42,6 +42,15 @@ const AppContextProvider = (props) => {
         }
     };
 
+    const updateChatData = (newChat) => {                                                    
+        setChatData((prevChatData) => {
+            if (prevChatData.some((chat) => chat.messageId === newChat.messageId)) {
+                return prevChatData; // Avoid duplicate entries
+            }
+            return [newChat, ...prevChatData].sort((a, b) => b.updatedAt - a.updatedAt);
+        });
+    }
+
     useEffect(() => {
         if (userData) {
             const chatRef = doc(db, "chats", userData.id);
@@ -69,7 +78,8 @@ const AppContextProvider = (props) => {
         setUserData,
         chatData,
         setChatData,
-        loadUserData
+        loadUserData,
+        updateChatData
     }
 
     return (
