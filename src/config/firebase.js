@@ -12,15 +12,15 @@ const firebaseConfig = {
   appId: "1:327511941808:web:0c01cc371a61d02d4e5175"
 };
 
-const signUp = async (username, EmailAuthCredential, password) => {
+const signUp = async (username, email, password) => {
     try {
-        const res = await createUserWithEmailAndPassword(auth, EmailAuthCredential, password);
+        const res = await createUserWithEmailAndPassword(auth, email, password);
         const user = res.user;
 
         await setDoc(doc(db, "users", user.uid), {
             id: user.uid,
             username: username.toLowerCase(),
-            email,
+            email: email,  // this now works
             name: "",
             avatar: "",
             bio: "Hey There, I'am using this chat app.",
@@ -29,11 +29,11 @@ const signUp = async (username, EmailAuthCredential, password) => {
 
         await setDoc(doc(db, "chats", user.uid), {
             chatsData: []
-        })
+        });
 
     } catch (error) {
         console.log(error);
-        toast.error(error.code.split("/")[1].split("-").join(" "));
+        toast.error(error.code?.split("/")[1]?.split("-").join(" ") || "signup failed");
     }
 };
 
