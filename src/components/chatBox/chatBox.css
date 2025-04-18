@@ -73,7 +73,7 @@
 
 .msg {
     color: white;
-    background: #077eff;
+    /* background: #077eff; */
     padding: 8px;
     max-width: 200px;
     font-size: 14px;
@@ -85,6 +85,11 @@
 
 .r-msg .msg {
     border-radius: 8px 8px 8px 0px;
+    background: #077eff;
+}
+
+.s-msg .msg {
+    background: #16a121;
 }
 
 .s-msg div,
