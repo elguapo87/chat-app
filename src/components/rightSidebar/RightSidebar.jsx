@@ -1,5 +1,6 @@
 import "./rightSidebar.css";
 import assets from "../../assets/assets";
+import { logout } from "../../config/firebase";
 
 const RightSidebar = () => {
   return (
@@ -26,7 +27,7 @@ const RightSidebar = () => {
       <button>Logout</button>
       
       <div className="buttons">
-        <button className="logout-btn">Logout</button>
+      <button onClick={() => logout()}>Logout</button>
         <button className="block-btn">Block</button>
       </div>
 
