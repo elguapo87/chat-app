@@ -128,3 +128,22 @@
     pointer-events: none;
     opacity: 0.5;
 }
+
+.last-message-thumbnail {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.friends.border img  {
+    border: 3px solid #07fff3;
+ }
+ 
+ .friends.border div span {
+     color: #07fff3;
+ }
+ 
+ .friends.border div img {                 
+     border: 1px solid #07fff3;
+ }

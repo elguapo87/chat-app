@@ -8,7 +8,7 @@ import { AppContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
 
 const LeftSidebar = () => {
-  const { userData, chatData, setChatUser, setMessagesId } = useContext(AppContext);   
+  const { userData, chatData, setChatUser, setMessagesId } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -16,11 +16,11 @@ const LeftSidebar = () => {
 
   const inputHandler = async (e) => {
     try {
-      const input = e.target.value; 
+      const input = e.target.value;
       if (input) {
         setShowSearch(true);
         const userRef = collection(db, "users");
-        const q = query(userRef, where("username","==",input.toLowerCase()));
+        const q = query(userRef, where("username", "==", input.toLowerCase()));
         const querySnap = await getDocs(q);
         if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
           let userExists = false;
@@ -44,7 +44,7 @@ const LeftSidebar = () => {
       }
 
     } catch (error) {
-      
+
     }
   };
 
@@ -65,7 +65,7 @@ const LeftSidebar = () => {
           lastMessage: "",
           rId: userData.id,
           updatedAt: Date.now(),
-          messageSeen: true 
+          messageSeen: true
         })
       })
 
@@ -75,7 +75,7 @@ const LeftSidebar = () => {
           lastMessage: "",
           rId: user.id,
           updatedAt: Date.now(),
-          messageSeen: true 
+          messageSeen: true
         })
       })
 
@@ -85,28 +85,23 @@ const LeftSidebar = () => {
     }
   };
 
-  const settingChat = async (item) => {                                 
-    try {
+  const setChat = async (item) => {
+    try {                                 
       setMessagesId(item.messageId);
       setChatUser(item);
-      
       const userChatsRef = doc(db, "chats", userData.id);
       const userChatsSnapshot = await getDoc(userChatsRef);
       const userChatsData = userChatsSnapshot.data();
       const chatIndex = userChatsData.chatsData.findIndex((c) => c.messageId === item.messageId);
       userChatsData.chatsData[chatIndex].messageSeen = true;
-
       await updateDoc(userChatsRef, {
         chatsData: userChatsData.chatsData
-      });
-
-      setShowSearch(false);
-
+      })
+      
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      toast.error(error.message); 
     }
-  }
+  };
 
   return (
     <div className="ls">
@@ -132,21 +127,21 @@ const LeftSidebar = () => {
       <div className="ls-list">
         {
           showSearch && user
-               ?
-          <div onClick={addChat} className="friends add-user">
-            <img src={user.avatar} alt="" />
-            <p>{user.name}</p>
-          </div>
-               :      
-          chatData.map((item, index) => (
-            <div onClick={() => settingChat(item)} key={index} className="friends">             
-              <img src={item.userData.avatar} alt="" />
-              <div>
-                <p>{item.userData.name}</p>
-                <span>{item.lastMessage}</span>
-              </div>
+            ?
+            <div onClick={addChat} className="friends add-user">
+              <img src={user.avatar} alt="" />
+              <p>{user.name}</p>
             </div>
-          ))
+            :
+            chatData.map((item, index) => (
+              <div onClick={() => setChat(item)} key={index} className={`friends ${item.messageSeen || item.messageId === messagesId ? "" : "border"}`}>
+                  <img src={item.userData.avatar} alt="" />
+                   <div>
+                     <p>{item.userData.name}</p>
+                     <span>{item.lastMessage}</span>
+                   </div>
+               </div>
+           ))
         }
       </div>
     </div>
