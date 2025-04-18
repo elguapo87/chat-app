@@ -61,4 +61,29 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export { auth, db, signUp, login, logout };
+const resetPass = async (email) => {   
+    if (!email) {
+        toast.error("Enter your email");
+        return null;
+    }
+
+    try {
+        const userRef = collection(db, "users");
+        const q = query(userRef, where("email","==",email));
+        const querySnap = await getDocs(q)
+
+        if (!querySnap.empty) {
+            await sendPasswordResetEmail(auth, email);
+            toast.success("Reset Email Sent");
+
+        } else {
+            toast.error("Email doesn't exists");
+        }
+
+    } catch (error) {
+        console.error(error);
+        toast.error(error.message);
+    }
+};
+
+export { auth, db, signUp, login, logout, resetPass };
