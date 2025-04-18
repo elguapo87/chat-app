@@ -6,6 +6,15 @@
   box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
   font-family: "Poppins", sans-serif;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+img.dot {
+  width: 15px !important;
 }
